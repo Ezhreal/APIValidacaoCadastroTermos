@@ -1,0 +1,19 @@
+# Ambiente Virtual
+venv/
+*/venv/
+.venv/
+env/
+*/env/
+.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Arquivos de IDEs (exemplo VSCode)
+.vscode/
+
+# Outros
+*.log
+.DS_Store # macOS
