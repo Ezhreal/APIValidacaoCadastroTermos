@@ -21,7 +21,7 @@ db_mock = {
 # Modelo para o payload do POST /validar-token
 class TokenPayload(BaseModel):
     token: str = Field(..., description="Token a ser validado")
-    
+
 class TermoPayload(BaseModel):
     """Modelo para o corpo da requisição do endpoint ValidaTermo."""
     cpf: str = Field(..., description="CPF do usuário (somente números)", examples=["11122233344"])
@@ -97,7 +97,8 @@ async def valida_cadastro_endpoint(cpf: str):
     return {
         "nome_completo": usuario["nome_completo"],
         "email": usuario["email"],
-        "aceitou_termos": usuario["aceitou_termos"]
+        "aceitou_termos": usuario["aceitou_termos"],
+        "pontuacao": usuario["pontuacao"]
     }
 
 @app.get("/termos", tags=["Termos"])
