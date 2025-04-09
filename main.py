@@ -12,9 +12,9 @@ app = FastAPI(
 # --- Mock de Banco de Dados ---
 # Em uma aplicação real, você buscaria/salvaria esses dados em um banco de dados.
 db_mock = {
-    "79349171988": {"nome_completo": "Fulano de Tal Silva", "email": "fulano.silva@email.com", "aceitou_termos": False},
-    "89540115604": {"nome_completo": "Ciclana Souza", "email": "c.souza@email.net", "aceitou_termos": True},
-    "21874323518": {"nome_completo": "Beltrano Oliveira", "email": "beltrano@mail.org", "aceitou_termos": False},
+    "79349171988": {"nome_completo": "Fulano de Tal Silva", "email": "fulano.silva@email.com", "aceitou_termos": False, "pontuacao" : "4500"},
+    "89540115604": {"nome_completo": "Ciclana Souza", "email": "c.souza@email.net", "aceitou_termos": True, "pontuacao" : "2100"},
+    "21874323518": {"nome_completo": "Beltrano Oliveira", "email": "beltrano@mail.org", "aceitou_termos": False, "pontuacao" : "230"},
 }
 
 # --- Modelos Pydantic para Request Body ---
@@ -128,6 +128,35 @@ async def valida_termo_endpoint(payload: TermoPayload):
     print(f"Status de aceite dos termos atualizado para CPF {cpf}: {aceitou}") # Log no servidor
 
     return {"status": "OK"}
+
+# NOVO Endpoint para validar o token
+@app.post("/validar-token", tags=["Catálogo"], response_model=dict)
+async def validar_token_endpoint(payload: TokenPayload):
+    """
+    Valida se o token fornecido é igual ao token fixo "1234".
+    Retorna status 200 com {"valido": True} se correto.
+    Levanta erro 400 (Bad Request) se o token estiver incorreto.
+    """
+    token_recebido = payload.token
+    token_correto = "1234" # Token fixo para validação
+
+    print(f"Recebido token para validação: '{token_recebido}'") # Log para debug
+
+    if token_recebido == token_correto:
+        print("Token VÁLIDO.")
+        return {"valido": True, "status": "Token correto"} # Retorna 200 OK por padrão
+    else:
+        print("Token INVÁLIDO.")
+        # Levanta uma exceção HTTP que resultará em status 400
+        raise HTTPException(status_code=400, detail="Token inválido fornecido.")
+
+# Endpoint para retornar o link do catálogo (chamado após validação bem-sucedida)
+@app.get("/acessar-catalogo", tags=["Catálogo"], response_model=dict)
+async def acessar_catalogo_endpoint():
+    """ Retorna o link de acesso ao catálogo. """
+    link_catalogo = "https://www.google.com/" # Link genérico fixo
+    print("Endpoint /acessar-catalogo chamado.")
+    return {"link_catalogo": link_catalogo}
 
 # --- Para rodar o servidor (se executar este arquivo diretamente) ---
 if __name__ == "__main__":
