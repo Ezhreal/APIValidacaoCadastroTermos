@@ -18,7 +18,10 @@ db_mock = {
 }
 
 # --- Modelos Pydantic para Request Body ---
-
+# Modelo para o payload do POST /validar-token
+class TokenPayload(BaseModel):
+    token: str = Field(..., description="Token a ser validado")
+    
 class TermoPayload(BaseModel):
     """Modelo para o corpo da requisição do endpoint ValidaTermo."""
     cpf: str = Field(..., description="CPF do usuário (somente números)", examples=["11122233344"])
